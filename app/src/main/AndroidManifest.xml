@@ -3,10 +3,11 @@
     package="com.bsu.android.acd">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:name=".AcdApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -25,8 +26,9 @@
         <service
             android:name=".NetworkService"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
+
+        <activity android:name=".DeviceViewActivity"></activity>
     </application>
 
 </manifest>

@@ -1,8 +1,10 @@
 package com.bsu.android.acd;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -10,67 +12,56 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 /**
  * Created by surajdeuja on 3/3/16.
  */
 public class NetworkDiscovery {
-    public static final int SERVER_DISCOVERY_PORT = 9124; // ACD device listens on this port
-    public static final int CLIENT_DISCOVERY_PORT = 9125; // Mobile app listens on this port
-    public static final String UDP_CLIENT_BROADCAST_MSG = "ACD_DEVICE_DISCOVERY"; // APP sends UDP packet with this message
-    public static final String UDP_ACD_BROADCAST_MSG = "ACD_DEVICE"; // ACD device UDP packet with this message
-    private final String TAG = "NetworkDiscovery";
     private Context mContext;
-    private InetAddress ACDInetAddress;
+    public static final int SERVER_DISCOVERY_PORT = 9124; // ACD device listens on this port
+    private final String TAG = "NetworkDiscovery";
 
     public NetworkDiscovery(Context context) {
         mContext = context;
     }
 
     /**
-     * Listen to the ACD device message after sending broadcast
-     */
-    public void listenBroadcast() throws Exception {
-        byte[] recv_buf = new byte[1024];
-        try {
-            DatagramSocket datagramSocket = new DatagramSocket(CLIENT_DISCOVERY_PORT);
-            datagramSocket.setSoTimeout(5000);
-            DatagramPacket packet = new DatagramPacket(recv_buf, recv_buf.length);
-            datagramSocket.receive(packet);
-            ACDInetAddress = packet.getAddress();
-            Log.d(TAG, "Found device " + ACDInetAddress.getHostAddress());
-        } catch (SocketTimeoutException e) {
-            Log.e(TAG, "Socket timeout");
-            throw e;
-        } catch (SocketException e) {
-            Log.e(TAG, "Could not initialize udp socket at PORT " + CLIENT_DISCOVERY_PORT);
-            throw e;
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to listen for UDP packet");
-            throw e;
-        }
-    }
-
-    /**
      * Send broadcast message for ACD device
      */
-    public void sendBroadcast() throws Exception {
+    public void discoverDevice() {
+        String broadcastMsg = JsonUtils.createBroadcastPayload();
+        DatagramSocket datagramSocket = null;
         try {
-            DatagramSocket datagramSocket = new DatagramSocket(SERVER_DISCOVERY_PORT);
+            datagramSocket = new DatagramSocket(SERVER_DISCOVERY_PORT);
+            // Send broadcast for ACD device
             datagramSocket.setBroadcast(true);
-            DatagramPacket packet = new DatagramPacket(UDP_CLIENT_BROADCAST_MSG.getBytes(),
-                    UDP_CLIENT_BROADCAST_MSG.length(),
+            DatagramPacket broadcastPacket = new DatagramPacket(broadcastMsg.getBytes(),
+                    broadcastMsg.length(),
                     getBroadcastAddress(),
                     SERVER_DISCOVERY_PORT);
-            datagramSocket.send(packet);
-            datagramSocket.close();
+            datagramSocket.send(broadcastPacket);
+
+            // Create receive buffer
+            byte[] buf = new byte[1024];
+            DatagramPacket recvPacket  = new DatagramPacket(buf, buf.length);
+
+            // Wait for response
+            while(true) {
+                datagramSocket.setSoTimeout(5000);      // Set timeout after 5 seconds
+                datagramSocket.receive(recvPacket);
+                String msg = new String(recvPacket.getData(),0,recvPacket.getLength());
+                if (JsonUtils.isBroadcastAck(msg)) {
+                    broadcastDevice(JsonUtils.getDeviceName(msg), recvPacket.getAddress().getHostAddress());
+                }
+                Log.d(TAG, new String(recvPacket.getData(), 0, recvPacket.getLength()));
+            }
         } catch (SocketException e) {
             Log.e(TAG, "Could not initialize udp socket at PORT " + SERVER_DISCOVERY_PORT);
-            throw e;
         } catch (IOException e) {
             Log.e(TAG, "Failed to get broadcast address");
-            throw e;
+        } finally {
+            if (datagramSocket != null)
+                datagramSocket.close();
         }
     }
 
@@ -86,11 +77,15 @@ public class NetworkDiscovery {
         return InetAddress.getByAddress(quads);
     }
 
-    public InetAddress getACDIpAddress() {
-        if (ACDInetAddress == null) {
-            return null;
-        }
-        return ACDInetAddress;
+    /**
+     * Function to broadcast the new device found
+     */
+    public void broadcastDevice(String deviceName, String deviceIp) {
+        Log.d(TAG, "Sending Device found at " + deviceIp);
+        Intent intent = new Intent(MainActivity.ADD_DEVICE);
+        intent.putExtra("device-name", deviceName);
+        intent.putExtra("device-ip", deviceIp);
+        LocalBroadcastManager.getInstance(this.mContext).sendBroadcast(intent);
     }
 
 }

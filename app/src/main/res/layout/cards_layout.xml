@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/btn_view_card"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:elevation="5dp"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/btn_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layout_gravity="top"
+            android:background="#FFFFFF"
+            android:gravity="top"
+            android:textSize="20sp"
+            android:text="Button Name"
+            android:textColor="#6D4C41"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+        <ImageView
+            android:name="@+id/btn_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:backgroundTint="#ECEFF1"
+            android:background="@drawable/ic_photo_size_select_actual_black_24dp"/>
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layout_gravity="bottom"
+            android:background="#FFFFFF"
+            android:textSize="20dp"
+            android:gravity="bottom"
+            android:text="Button Text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>
