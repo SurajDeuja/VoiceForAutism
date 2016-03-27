@@ -2,6 +2,7 @@ package com.bsu.android.acd;
 
 import com.bsu.android.acd.rpc.RpcClient;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Singleton;
 

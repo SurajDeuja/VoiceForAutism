@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bsu.android.acd.rpc.Button;
@@ -17,8 +19,10 @@ import com.bsu.android.acd.rpc.RpcRequest;
 import com.bsu.android.acd.rpc.RpcResponse;
 import com.bsu.android.acd.rpc.RpcResults;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +45,6 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
 
     private BtnAdapter mBtnAdapter;
 
-    private String[] mData = {"a", "b", "c"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,7 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
 
         setTitle(mCurrentDevice.getDeviceName());
 
-        mRpcClient.setUri("http://" + mCurrentDevice.getDeviceIp()+":8000/jsonrpc");
+        mRpcClient.setUri("http://" + mCurrentDevice.getDeviceIp()+":8000");
         getButtonList();
         Log.d(TAG, "Selected device: " + mCurrentDevice + "/" + mCurrentDevice.getDeviceIp());
     }
@@ -83,19 +85,33 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
         Log.d(TAG, "Recieved button list");
     }
 
-    public static class BtnAdapter extends RecyclerView.Adapter<BtnAdapter.ViewHolder> {
+    public class BtnAdapter extends RecyclerView.Adapter<BtnAdapter.ViewHolder> {
         private ArrayList<Button> mDataSet;
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mTextView;
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView btnName;
+            TextView btnId;
+            ImageView btnImageView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                mTextView = (TextView) itemView.findViewById(R.id.btn_name);
+                btnName = (TextView) itemView.findViewById(R.id.btn_name);
+                btnId = (TextView) itemView.findViewById(R.id.btn_id);
+                btnImageView = (ImageView) itemView.findViewWithTag("fuck");
             }
 
             public void setText(String s) {
-                mTextView.setText(s);
+                btnName.setText(s);
+            }
+
+            public void setBtnId(int id) {
+                btnId.setText(Integer.toString(id));
+            }
+
+            public void setBtnImage(String uri) {
+                Picasso.with(DeviceViewActivity.this)
+                        .load(DeviceViewActivity.this.mRpcClient.getmUri()+"/images?"+uri)
+                        .into(btnImageView);
             }
         }
 
@@ -113,13 +129,15 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.cards_layout, parent, false);
-
             return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.setText(mDataSet.get(position).getText());
+            Button b = mDataSet.get(position);
+            holder.setText(b.getText());
+            holder.setBtnId(b.getId());
+            holder.setBtnImage(b.getUri());
         }
 
         @Override

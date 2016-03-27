@@ -16,39 +16,41 @@
         android:padding="10dp">
 
         <TextView
+            android:layout_gravity="top"
+            android:gravity="top"
             android:id="@+id/btn_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:layout_gravity="top"
             android:background="#FFFFFF"
-            android:gravity="top"
             android:textSize="20sp"
             android:text="Button Name"
             android:textColor="#6D4C41"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
         <ImageView
+            android:layout_gravity="center"
             android:name="@+id/btn_image"
+            android:layout_weight="0.8"
+            android:tag="fuck"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
             android:backgroundTint="#ECEFF1"
-            android:background="@drawable/ic_photo_size_select_actual_black_24dp"/>
+            android:layout_height="0dp" />
 
         <TextView
-            android:id="@+id/info_text"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:id="@+id/btn_id"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:layout_gravity="bottom"
             android:background="#FFFFFF"
-            android:textSize="20dp"
-            android:gravity="bottom"
+            android:textSize="20sp"
             android:text="Button Text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     </LinearLayout>
+
 
 
 

@@ -36,6 +36,10 @@ public class RpcClient {
         mUri = uri;
     }
 
+    public String getmUri() {
+        return mUri;
+    }
+
     public void sendRequest(RpcRequest rpcObject, RpcCallback callback) {
         String json = mGson.toJson(rpcObject);
         RequestBody requestBody = RequestBody.create(JSON, json);

@@ -9,6 +9,11 @@ import java.util.List;
 public class Button {
     private int id;
     private String text;
+    private String uri;
+
+    public String getUri() {
+        return uri;
+    }
 
     public int getId() {
         return id;
@@ -20,6 +25,10 @@ public class Button {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getId(int id) {
+        return id;
     }
 
     public void setText(String text) {

@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#BDBDBD"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:paddingStart="5dp"
+        android:background="#FAFAFA"
         android:paddingEnd="5dp">
 
         <TextView
             android:id="@+id/deviceName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:layout_weight="0.7"
+            android:layout_height="0dp"
+            android:textSize="22sp"
+            android:layout_weight="0.5"
+            android:text="Text 1"
+            android:textStyle="bold"
             />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/deviceIp"
             android:layout_gravity="bottom"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.5"
+            android:textStyle="italic"
+            android:gravity="bottom"
+            android:text="Text 2"/>
 
     </LinearLayout>
 
