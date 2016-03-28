@@ -1,5 +1,7 @@
 package com.bsu.android.acd;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,8 @@ import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +39,11 @@ public class MainActivity extends AppCompatActivity
 
     @Bind(R.id.devices_list)
     ListView devicesListView;
+    @Bind(R.id.loading_spinner)
+    View mLoadingSpinner;
+    private int mShortAnimationDuration;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
 
     private DevicesAdapter devicesAdapter;
     private BroadcastReceiver mAddDeviceReceiver = new BroadcastReceiver() {
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity
             String devName = intent.getStringExtra(getString(R.string.deviceName));
             String devIp = intent.getStringExtra(getString(R.string.deviceIp));
             devicesAdapter.add(new Device(devName, devIp));
+            crossfade();
         }
     };
 
@@ -53,15 +63,36 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        mShortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
+        devicesListView.setVisibility(View.GONE);
+        mLoadingSpinner.setVisibility(View.GONE);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
+                mLoadingSpinner.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.GONE);
                 Intent intent = new Intent(MainActivity.this, NetworkService.class);
                 startService(intent);
+
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mLoadingSpinner.setVisibility(View.GONE);
+                                fab.setVisibility(view.VISIBLE);
+                            }
+                        });
+                    }
+                }, 30 * 1000);
             }
         });
 
@@ -78,6 +109,33 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+    }
+
+    public void setVisibility(View v, int visibility) {
+        v.setVisibility(visibility);
+    }
+
+    public void crossfade() {
+        devicesListView.setAlpha(0f);
+        devicesListView.setVisibility(View.VISIBLE);
+
+        devicesListView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        if (mLoadingSpinner.getVisibility() == View.VISIBLE) {
+            mLoadingSpinner.animate()
+                    .alpha(0f)
+                    .setDuration(mShortAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mLoadingSpinner.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
 
     @Override
