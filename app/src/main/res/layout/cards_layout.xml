@@ -5,53 +5,64 @@
     android:id="@+id/btn_view_card"
     android:layout_width="match_parent"
     android:layout_height="300dp"
-    android:elevation="5dp"
     android:layout_margin="5dp"
+    android:elevation="5dp"
     card_view:cardCornerRadius="4dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_gravity="top"
-            android:gravity="top"
-            android:id="@+id/btn_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
-            android:background="#FFFFFF"
-            android:textSize="20sp"
-            android:text="Button Name"
-            android:textColor="#6D4C41"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <ImageView
-            android:layout_gravity="center"
-            android:name="@+id/btn_image"
-            android:layout_weight="0.8"
-            android:tag="fuck"
-            android:layout_width="match_parent"
-            android:backgroundTint="#ECEFF1"
-            android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/btn_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:layout_weight="0.2"
+                android:background="#FFFFFF"
+                android:gravity="top"
+                android:text="Button Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="#6D4C41"
+                android:textSize="20sp" />
 
-        <TextView
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
-            android:id="@+id/btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
-            android:background="#FFFFFF"
-            android:textSize="20sp"
-            android:text="Button Text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            <ImageView
+                android:name="@+id/btn_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.8"
+                android:backgroundTint="#ECEFF1"
+                android:tag="fuck" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="0.2"
+                android:background="#FFFFFF"
+                android:gravity="bottom"
+                android:text="Button Text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="20sp" />
 
+        </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btn_edit"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/ic_mode_edit_black_24dp"/>
+    </FrameLayout>
 
 
 </android.support.v7.widget.CardView>

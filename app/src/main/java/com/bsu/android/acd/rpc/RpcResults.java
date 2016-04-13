@@ -2,6 +2,7 @@ package com.bsu.android.acd.rpc;
 
 import android.util.Log;
 
+import com.bsu.android.acd.pojo.DeviceButton;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
 public class RpcResults {
     public static final String TAG = "RpcResults";
 
-    public static List<Button> buttonListFromJson(String json, Gson gson) {
+    public static List<DeviceButton> buttonListFromJson(String json, Gson gson) {
         Log.d(TAG, json);
-        Button.ButtonArray btnArray = gson.fromJson(json, Button.ButtonArray.class);
-        return btnArray.getButtons();
+        DeviceButton.ButtonArray btnArray = gson.fromJson(json, DeviceButton.ButtonArray.class);
+        return btnArray.getDeviceButtons();
     }
 }

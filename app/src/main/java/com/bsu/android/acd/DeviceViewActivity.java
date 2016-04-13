@@ -1,5 +1,6 @@
 package com.bsu.android.acd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bsu.android.acd.rpc.Button;
+import com.bsu.android.acd.pojo.DeviceButton;
 import com.bsu.android.acd.rpc.RpcCallback;
 import com.bsu.android.acd.rpc.RpcClient;
 import com.bsu.android.acd.rpc.RpcRequest;
@@ -22,7 +23,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
 
         setTitle(mCurrentDevice.getDeviceName());
 
-        mRpcClient.setUri("http://" + mCurrentDevice.getDeviceIp()+":8000");
+        mRpcClient.setUri("http://" + mCurrentDevice.getDeviceIp() + ":8000");
         getButtonList();
         Log.d(TAG, "Selected device: " + mCurrentDevice + "/" + mCurrentDevice.getDeviceIp());
     }
@@ -74,30 +74,45 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
     public void getButtonList() {
         mRpcClient.sendRequest(RpcRequest.builder()
                 .method("get_btns")
-                .build(),this);
+                .build(), this);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mBtnAdapter.deleteAll();
+        mBtnAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getButtonList();
     }
 
     @Override
     public void onResponse(RpcResponse response) {
-        List<Button> btnList = RpcResults.buttonListFromJson(response.getResult(),gson);
+        List<DeviceButton> btnList = RpcResults.buttonListFromJson(response.getResult(), gson);
         mBtnAdapter.addButtons(btnList);
-        mBtnAdapter.notifyItemInserted(mBtnAdapter.getItemCount()-1);
+        mBtnAdapter.notifyItemInserted(mBtnAdapter.getItemCount() - 1);
         Log.d(TAG, "Recieved button list");
     }
 
     public class BtnAdapter extends RecyclerView.Adapter<BtnAdapter.ViewHolder> {
-        private ArrayList<Button> mDataSet;
+        private ArrayList<DeviceButton> mDataSet;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView btnName;
             TextView btnId;
             ImageView btnImageView;
+            ImageView btnEditCard;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 btnName = (TextView) itemView.findViewById(R.id.btn_name);
                 btnId = (TextView) itemView.findViewById(R.id.btn_id);
                 btnImageView = (ImageView) itemView.findViewWithTag("fuck");
+                btnEditCard = (ImageButton) itemView.findViewById(R.id.btn_edit);
             }
 
             public void setText(String s) {
@@ -110,7 +125,7 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
 
             public void setBtnImage(String uri) {
                 Picasso.with(DeviceViewActivity.this)
-                        .load(DeviceViewActivity.this.mRpcClient.getmUri()+"/images?"+uri)
+                        .load(DeviceViewActivity.this.mRpcClient.getmUri() + "/" + uri)
                         .into(btnImageView);
             }
         }
@@ -118,12 +133,6 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
         public BtnAdapter() {
             mDataSet = new ArrayList<>();
         }
-//        public BtnAdapter(Object[] array) {
-//            this.mDataSet = new ArrayList<>();
-//            for (Object o: array) {
-//                mDataSet.add((String)o);
-//            }
-//        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -134,10 +143,18 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Button b = mDataSet.get(position);
+            final DeviceButton b = mDataSet.get(position);
             holder.setText(b.getText());
             holder.setBtnId(b.getId());
             holder.setBtnImage(b.getUri());
+            holder.btnEditCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(DeviceViewActivity.this, EditButtonActivity.class);
+                    intent.putExtra("button", Parcels.wrap(b));
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override
@@ -145,10 +162,14 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
             return mDataSet.size();
         }
 
-        public void addButtons(List<Button> buttons) {
-            for (Button btn : buttons) {
+        public void addButtons(List<DeviceButton> deviceButtons) {
+            for (DeviceButton btn : deviceButtons) {
                 mDataSet.add(btn);
             }
+        }
+
+        public void deleteAll() {
+            mDataSet = new ArrayList<>();
         }
 
     }

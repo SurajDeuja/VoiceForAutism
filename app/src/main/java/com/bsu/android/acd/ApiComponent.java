@@ -11,4 +11,5 @@ import dagger.Component;
 @Component(modules = ApiModule.class)
 public interface ApiComponent {
     void inject(DeviceViewActivity activity);
+    void inject(EditButtonActivity activity);
 }
