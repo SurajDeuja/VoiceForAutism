@@ -19,8 +19,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--<style name="UploadButton">-->
-        <!--<item name="colorControlHighlight">@color/indigo</item>-->
-        <!--<item name="colorButtonNormal">@color/pink</item>-->
+    <!--<item name="colorControlHighlight">@color/indigo</item>-->
+    <!--<item name="colorButtonNormal">@color/pink</item>-->
     <!--</style>-->
 
     <!--<style name="Button">Value</style>-->
