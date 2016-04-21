@@ -13,4 +13,5 @@ public interface ApiComponent {
     void inject(DeviceViewActivity activity);
     void inject(EditButtonActivity activity);
     void inject(LogViewActivity activity);
+    void inject(LogTableViewActivity activity);
 }

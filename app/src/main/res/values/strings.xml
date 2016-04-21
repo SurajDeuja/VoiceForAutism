@@ -6,5 +6,6 @@
 
     <string name="action_save">Upload</string>
     <string name="title_activity_log_view">Log</string>
-    <string name="log">View Log</string>
+    <string name="log">View Log as Graph</string>
+    <string name="logTable">View Log as Table</string>
 </resources>
