@@ -167,8 +167,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LogViewActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.logTable){
+            Intent intent = new Intent(this, LogTableViewActivity.class);
+            startActivity(intent);
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

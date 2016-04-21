@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.bsu.android.acd.pojo.ButtonAction;
@@ -71,7 +72,7 @@ public class LogViewActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl("http://192.168.0.5:8000")
+                .baseUrl("http://192.168.1.36:8000")
                 .build();
 
         LogData logData = retrofit.create(LogData.class);
