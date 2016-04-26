@@ -82,21 +82,24 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
     @Override
     protected void onRestart() {
         super.onRestart();
-        mBtnAdapter.deleteAll();
-        mBtnAdapter.notifyDataSetChanged();
+       // mBtnAdapter.deleteAll();
+       // mBtnAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mBtnAdapter.deleteAll();
         getButtonList();
+        mBtnAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResponse(RpcResponse response) {
         List<DeviceButton> btnList = RpcResults.buttonListFromJson(response.getResult(), gson);
         mBtnAdapter.addButtons(btnList);
-        mBtnAdapter.notifyItemInserted(mBtnAdapter.getItemCount() - 1);
+
+//        mBtnAdapter.notifyItemInserted(mBtnAdapter.getItemCount() - 1);
         Log.d(TAG, "Recieved button list");
     }
 
@@ -116,6 +119,7 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
                 btnImageView = (ImageView) itemView.findViewWithTag("fuck");
                 btnEditCard = (ImageButton) itemView.findViewById(R.id.btn_edit);
             }
+
 
             public void setText(String s) {
                 btnName.setText(s);
@@ -173,6 +177,8 @@ public class DeviceViewActivity extends AppCompatActivity implements RpcCallback
         public void deleteAll() {
             mDataSet = new ArrayList<>();
         }
+
+
 
     }
 

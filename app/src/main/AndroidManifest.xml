@@ -32,6 +32,7 @@
 
         <activity android:name=".DeviceViewActivity" />
         <activity android:name=".EditButtonActivity" />
+        <activity android:name=".LogTableViewActivity" />
         <activity
             android:name=".LogViewActivity"
             android:label="@string/title_activity_log_view"

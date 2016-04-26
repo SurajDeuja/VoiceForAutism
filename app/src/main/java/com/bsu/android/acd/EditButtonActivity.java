@@ -130,6 +130,7 @@ public class EditButtonActivity extends AppCompatActivity {
         mImageUri = Uri.fromFile(new File(getCacheDir(),
                 new File(imageUri.getPath()).getName()));
         Crop.of(imageUri, mImageUri)
+                .withAspect(10,7)
                 .withMaxSize(mDeviceButton.getWidth(), mDeviceButton.getHeight())
                 .start(this);
     }
