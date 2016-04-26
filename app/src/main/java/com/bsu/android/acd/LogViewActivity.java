@@ -71,7 +71,7 @@ public class LogViewActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl("http://192.168.0.5:8000")
+                .baseUrl(mRpcClient.getmUri())
                 .build();
 
         LogData logData = retrofit.create(LogData.class);
